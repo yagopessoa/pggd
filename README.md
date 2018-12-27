@@ -1,6 +1,6 @@
 # PGGD
 
-> A PWA for the Fellowship of The Game group built with Vue.js
+> A PWA educational project built with Vue.js
 
 ## Build Setup
 
