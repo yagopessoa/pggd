@@ -5,14 +5,34 @@ import * as firebase from 'firebase'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  state: {
+  state: () => ({
     user: null,
     loading: false,
-    error: null
-  },
+    error: null,
+    classes: [
+      {
+        id: 'asoidjoas',
+        title: 'Matemática',
+        teacher: 'aoisdjaoisjda'
+      },
+      {
+        id: 'asoidjoasaAS',
+        title: 'Geografia',
+        teacher: 'aoisdjaoisjda'
+      },
+      {
+        id: 'asoidjoasZ',
+        title: 'História',
+        teacher: 'aoisdjaoisjda'
+      }
+    ]
+  }),
   mutations: {
     setUser (state, payload) {
       state.user = payload
+    },
+    addClass (state, payload) {
+      state.classes.push(payload)
     },
     setLoading (state) {
       state.loading = !state.loading
@@ -34,7 +54,8 @@ export const store = new Vuex.Store({
             console.log('Cadastrou:', user.user)
             const newUser = {
               id: user.user.uid,
-              email: user.user.email
+              email: user.user.email,
+              isTeacher: true
             }
             commit('setUser', newUser)
           }
@@ -64,6 +85,23 @@ export const store = new Vuex.Store({
           commit('setError', error)
         })
     },
+    createClass ({commit}, payload) {
+      const newClass = {
+        title: payload.title,
+        teacher: payload.teacher
+      }
+      firebase.database().ref('classes').push(newClass)
+        .then((data) => {
+          const key = data.key
+          commit('addClass', {
+            ...newClass,
+            id: key
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     clearError ({commit}) {
       commit('clearError')
     }
@@ -71,6 +109,9 @@ export const store = new Vuex.Store({
   getters: {
     user (state) {
       return state.user
+    },
+    classes (state) {
+      return state.classes
     },
     loading (state) {
       return state.loading

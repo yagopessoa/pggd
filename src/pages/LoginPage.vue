@@ -41,7 +41,7 @@
 <script>
   export default {
     created () {
-      if (this.userIsAuthenticated) this.$router.push('/home')
+      if (this.userIsAuthenticated) this.$router.push('/turmas')
     },
     data: () => ({
       valid: false,
@@ -73,7 +73,7 @@
     watch: {
       user (value) {
         if (value !== null && value !== undefined) {
-          this.$router.push('/home')
+          this.$router.push('/turmas')
         }
       }
     },

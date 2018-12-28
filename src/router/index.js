@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import LoginPage from '@/pages/LoginPage'
 import SignupPage from '@/pages/SignupPage'
-import HomePage from '@/pages/HomePage'
+import ClassesPage from '@/pages/ClassesPage'
 
 Vue.use(Router)
 
@@ -20,9 +20,9 @@ export default new Router({
       component: SignupPage
     },
     {
-      path: '/home',
-      name: 'HomePage',
-      component: HomePage
+      path: '/turmas',
+      name: 'ClassesPage',
+      component: ClassesPage
     }
   ],
   mode: 'history'
