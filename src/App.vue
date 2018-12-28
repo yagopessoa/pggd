@@ -49,11 +49,25 @@
   export default {
     data () {
       return {
-        sideNav: false,
-        menuItems: [
+        sideNav: false
+      }
+    },
+    computed: {
+      menuItems () {
+        let menuItems = [
           { title: 'Entrar', link: '/' },
           { title: 'Cadastre-se', link: '/cadastro' }
         ]
+        if (this.userIsAuthenticated) {
+          menuItems = [
+            { title: 'Perfil', link: '/perfil' },
+            { title: 'Dúvidas', link: '/duvidas' }
+          ]
+        }
+        return menuItems
+      },
+      userIsAuthenticated () {
+        return this.$store.getters.user !== null && this.$store.getters.user !== undefined
       }
     },
     name: 'app'

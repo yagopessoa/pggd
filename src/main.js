@@ -5,9 +5,12 @@ import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
 import 'vuetify/dist/vuetify.min.css'
-import { store } from './store'
+import './stylus/main.styl'
 
+import { store } from './store'
 import * as firebase from 'firebase'
+
+import AlertCmp from './components/Alert.vue'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify,
@@ -23,6 +26,7 @@ Vue.use(Vuetify,
     }
   }
 )
+Vue.component('app-alert', AlertCmp)
 
 /* eslint-disable no-new */
 new Vue({

@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     user: null,
-    loading: false
+    loading: false,
+    error: null
   },
   mutations: {
     setUser (state, payload) {
@@ -15,10 +16,18 @@ export const store = new Vuex.Store({
     },
     setLoading (state) {
       state.loading = !state.loading
+    },
+    setError (state, payload) {
+      state.error = payload
+    },
+    clearError (state) {
+      state.error = null
     }
   },
   actions: {
     signUserUp ({commit}, payload) {
+      commit('setLoading')
+      commit('clearError')
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
@@ -29,12 +38,15 @@ export const store = new Vuex.Store({
             }
             commit('setUser', newUser)
           }
-        ).catch(err => {
-          console.log(err)
+        ).catch(error => {
+          console.log(error)
           commit('setLoading')
+          commit('setError', error)
         })
     },
     signUserIn ({commit}, payload) {
+      commit('setLoading')
+      commit('clearError')
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
@@ -46,10 +58,14 @@ export const store = new Vuex.Store({
             commit('setUser', newUser)
             commit('setLoading')
           }
-        ).catch(err => {
-          console.log(err)
+        ).catch(error => {
+          console.log(error)
           commit('setLoading')
+          commit('setError', error)
         })
+    },
+    clearError ({commit}) {
+      commit('clearError')
     }
   },
   getters: {
@@ -58,6 +74,9 @@ export const store = new Vuex.Store({
     },
     loading (state) {
       return state.loading
+    },
+    error (state) {
+      return state.error
     }
   }
 })

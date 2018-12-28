@@ -1,5 +1,10 @@
 <template>
-  <v-container>
+  <v-container fluid>
+    <v-layout row  v-if="error">
+      <v-flex xs12 sm8 md6 lg4 offset-sm2 offset-md3 offset-lg4>
+        <app-alert @dismissed="onDismissed" class="mb-3" :text="error.message"></app-alert>
+      </v-flex>
+    </v-layout>
     <v-layout row>
       <v-flex xs10 sm8 md6 lg4 offset-xs1 offset-sm2 offset-md3 offset-lg4 text-xs-center>
         <v-form v-model="valid">
@@ -70,8 +75,11 @@
             class="mb-2"
           ></v-text-field>
         </v-form>
-        <v-btn :disabled="isRequesting" color="primary" :style="'width: 100%; margin: 32px 0px'" contained @click="onSignUp">
+        <v-btn :disabled="loading" :loading="loading" color="primary" :style="'width: 100%; margin: 32px 0px'" contained @click="onSignUp">
           Cadastrar
+          <span slot="loader" class="custom-loader">
+            <v-icon light>cached</v-icon>
+          </span>
         </v-btn>
       </v-flex>
     </v-layout>
@@ -96,8 +104,7 @@
         v => !!v || 'Senha é obrigatória',
         v => v.length >= 8 || 'A senha deve ter pelo menos 8 caracteres'
       ],
-      confirmPassword: '',
-      isRequesting: false
+      confirmPassword: ''
     }),
     computed: {
       computedDateFormatted () {
@@ -111,6 +118,9 @@
       },
       loading () {
         return this.$store.getters.loading
+      },
+      error () {
+        return this.$store.getters.error
       }
     },
     watch: {
@@ -121,9 +131,6 @@
         if (value !== null && value !== undefined) {
           this.$router.push('/')
         }
-      },
-      loading (value) {
-        this.isRequesting = false
       }
     },
     methods: {
@@ -135,9 +142,11 @@
       },
       onSignUp () {
         if (this.valid) {
-          this.isRequesting = true
           this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
         }
+      },
+      onDismissed () {
+        this.$store.dispatch('clearError')
       }
     }
   }
