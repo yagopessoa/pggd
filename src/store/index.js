@@ -9,25 +9,12 @@ export const store = new Vuex.Store({
     user: null,
     loading: false,
     error: null,
-    classes: [
-      {
-        id: 'asoidjoas',
-        title: 'Matemática',
-        teacher: 'aoisdjaoisjda'
-      },
-      {
-        id: 'asoidjoasaAS',
-        title: 'Geografia',
-        teacher: 'aoisdjaoisjda'
-      },
-      {
-        id: 'asoidjoasZ',
-        title: 'História',
-        teacher: 'aoisdjaoisjda'
-      }
-    ]
+    classes: []
   }),
   mutations: {
+    setLoadedClasses (state, payload) {
+      state.classes = payload
+    },
     setUser (state, payload) {
       state.user = payload
     },
@@ -45,6 +32,29 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    loadClasses ({commit}) {
+      commit('setLoading')
+      commit('clearError')
+      firebase.database().ref('classes').once('value')
+        .then(data => {
+          const classes = []
+          const obj = data.val()
+          for (let key in obj) {
+            classes.push({
+              id: key,
+              title: obj[key].title,
+              teacher: obj[key].teacher
+            })
+          }
+          console.log(classes)
+          commit('setLoadedClasses', classes)
+          commit('setLoading')
+        })
+        .catch(error => {
+          console.log(error)
+          commit('setLoading', false)
+        })
+    },
     signUserUp ({commit}, payload) {
       commit('setLoading')
       commit('clearError')

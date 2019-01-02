@@ -43,5 +43,6 @@ new Vue({
       projectId: 'pggd-7f3cb',
       storageBucket: 'pggd-7f3cb.appspot.com'
     })
+    this.$store.dispatch('loadClasses')
   }
 })
