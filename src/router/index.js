@@ -5,6 +5,8 @@ import LoginPage from '@/pages/LoginPage'
 import SignupPage from '@/pages/SignupPage'
 import ClassesPage from '@/pages/ClassesPage'
 
+import AuthGuard from './auth-guard'
+
 Vue.use(Router)
 
 export default new Router({
@@ -22,7 +24,8 @@ export default new Router({
     {
       path: '/turmas',
       name: 'ClassesPage',
-      component: ClassesPage
+      component: ClassesPage,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from '../router'
 import * as firebase from 'firebase'
 
 Vue.use(Vuex)
@@ -46,7 +47,7 @@ export const store = new Vuex.Store({
               teacher: obj[key].teacher
             })
           }
-          console.log(classes)
+          console.log('Classes loaded =>', classes)
           commit('setLoadedClasses', classes)
           commit('setLoading')
         })
@@ -94,6 +95,14 @@ export const store = new Vuex.Store({
           commit('setLoading')
           commit('setError', error)
         })
+    },
+    autoSignin ({commit}, payload) {
+      commit('setUser', {id: payload.uid, email: payload.email})
+    },
+    logout ({commit}) {
+      firebase.auth().signOut()
+      commit('setUser', null)
+      router.push('/')
     },
     createClass ({commit}, payload) {
       const newClass = {

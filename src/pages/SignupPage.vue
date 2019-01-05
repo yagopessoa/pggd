@@ -52,6 +52,7 @@
           </v-flex>
 
           <v-text-field
+            autocapitalize="off"
             v-model="email"
             :rules="emailRules"
             label="E-mail"

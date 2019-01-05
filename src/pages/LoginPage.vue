@@ -9,6 +9,7 @@
         <v-flex xs10 sm8 md6 lg4 offset-xs1 offset-sm2 offset-md3 offset-lg4 text-xs-center>
           <v-form v-model="valid">
             <v-text-field
+              autocapitalize="off"
               v-model="email"
               :rules="emailRules"
               label="E-mail"

@@ -45,6 +45,7 @@
                     <v-card-text>
                         <v-form v-model="valid">
                             <v-text-field
+                                autofocus
                                 v-model="title"
                                 label="Nome"
                                 required

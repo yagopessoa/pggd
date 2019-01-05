@@ -18,7 +18,12 @@
           :key="item.title"
           :to="item.link"
         >
+          <v-icon left>{{ item.icon }}</v-icon>
           {{ item.title }}
+        </v-btn>
+        <v-btn flat v-if="userIsAuthenticated" @click="onLogout">
+          <v-icon left>exit_to_app</v-icon>
+          Sair
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -31,8 +36,19 @@
           :key="item.title"
           :to="item.link"
         >
+          <v-list-tile-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
           <v-list-tile-content>
             {{ item.title }}
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="userIsAuthenticated" @click="onLogout">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            Sair
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -55,19 +71,24 @@
     computed: {
       menuItems () {
         let menuItems = [
-          { title: 'Entrar', link: '/' },
-          { title: 'Cadastre-se', link: '/cadastro' }
+          { icon: 'forward', title: 'Entrar', link: '/' },
+          { icon: 'person_add', title: 'Cadastre-se', link: '/cadastro' }
         ]
         if (this.userIsAuthenticated) {
           menuItems = [
-            { title: 'Perfil', link: '/perfil' },
-            { title: 'Dúvidas', link: '/duvidas' }
+            /* { icon: 'account_circle', title: 'Perfil', link: '/perfil' }, */
+            { icon: 'list', title: 'Dúvidas', link: '/turmas' }
           ]
         }
         return menuItems
       },
       userIsAuthenticated () {
         return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+      }
+    },
+    methods: {
+      onLogout () {
+        this.$store.dispatch('logout')
       }
     },
     name: 'app'
