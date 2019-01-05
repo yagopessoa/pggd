@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
                 <p v-if="isTeacher" class="title ma-2">Suas turmas</p>
@@ -8,7 +8,7 @@
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list>
+                <v-list v-if="!loading">
                     <v-list-tile
                         v-for="item in classes"
                         :key="item.id"
@@ -19,9 +19,15 @@
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
+                <div class="spinner-container" v-else>
+                    <v-progress-circular
+                        indeterminate
+                        color="primary"
+                    ></v-progress-circular>
+                </div>
             </v-flex>
         </v-layout>
-        <v-layout row wrap justify-end>
+        <v-layout v-if="!loading">
             <v-dialog
                 v-model="dialog"
                 width="500"
@@ -91,6 +97,9 @@ export default {
     },
     classes () {
       return this.$store.getters.classes
+    },
+    loading () {
+      return this.$store.getters.loading
     }
   },
   methods: {
@@ -104,3 +113,22 @@ export default {
   }
 }
 </script>
+
+<style>
+.container{
+    height: calc(100vh - 64px);
+}
+.spinner-container{
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media screen and (max-width: 959px) {
+    .container{
+        height: calc(100vh - 56px);
+    } 
+}
+</style>
+

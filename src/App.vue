@@ -77,7 +77,7 @@
         if (this.userIsAuthenticated) {
           menuItems = [
             /* { icon: 'account_circle', title: 'Perfil', link: '/perfil' }, */
-            { icon: 'list', title: 'Dúvidas', link: '/turmas' }
+            { icon: 'list', title: 'Turmas', link: '/turmas' }
           ]
         }
         return menuItems
