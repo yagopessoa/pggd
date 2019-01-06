@@ -3,7 +3,7 @@
         <v-layout row>
             <v-flex xs12 text-xs-center>
                 <p v-if="isTeacher" class="title ma-2">Suas turmas</p>
-                <p v-else class="title ma-2">Disciplinas mastriculadas</p>
+                <p v-else class="title ma-2">Disciplinas matriculadas</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
@@ -93,7 +93,7 @@ export default {
   }),
   computed: {
     isTeacher () {
-      if (this.$store.getters.user) return this.$store.getters.user.isTeacher
+      if (this.$store.getters.user) return true
     },
     classes () {
       return this.$store.getters.classes

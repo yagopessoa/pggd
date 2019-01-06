@@ -22,8 +22,8 @@ export const store = new Vuex.Store({
     addClass (state, payload) {
       state.classes.push(payload)
     },
-    setLoading (state) {
-      state.loading = !state.loading
+    setLoading (state, payload) {
+      state.loading = payload
     },
     setError (state, payload) {
       state.error = payload
@@ -34,30 +34,28 @@ export const store = new Vuex.Store({
   },
   actions: {
     loadClasses ({commit}) {
-      commit('setLoading')
+      commit('setLoading', true)
       commit('clearError')
-      firebase.database().ref('classes').once('value')
-        .then(data => {
-          const classes = []
-          const obj = data.val()
-          for (let key in obj) {
-            classes.push({
-              id: key,
-              title: obj[key].title,
-              teacher: obj[key].teacher
-            })
-          }
-          console.log('Classes loaded =>', classes)
-          commit('setLoadedClasses', classes)
-          commit('setLoading')
-        })
-        .catch(error => {
-          console.log(error)
-          commit('setLoading', false)
-        })
+      firebase.database().ref('classes').on('value', data => {
+        const classes = []
+        const obj = data.val()
+        for (let key in obj) {
+          classes.push({
+            id: key,
+            title: obj[key].title,
+            teacher: obj[key].teacher
+          })
+        }
+        /* console.log('Classes loaded =>', classes) */
+        commit('setLoadedClasses', classes)
+        commit('setLoading', false)
+      }, error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
     },
     signUserUp ({commit}, payload) {
-      commit('setLoading')
+      commit('setLoading', true)
       commit('clearError')
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
@@ -69,15 +67,16 @@ export const store = new Vuex.Store({
               isTeacher: true
             }
             commit('setUser', newUser)
+            commit('setLoading', false)
           }
         ).catch(error => {
           console.log(error)
-          commit('setLoading')
+          commit('setLoading', false)
           commit('setError', error)
         })
     },
     signUserIn ({commit}, payload) {
-      commit('setLoading')
+      commit('setLoading', true)
       commit('clearError')
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
@@ -88,11 +87,11 @@ export const store = new Vuex.Store({
               email: user.user.email
             }
             commit('setUser', newUser)
-            commit('setLoading')
+            commit('setLoading', false)
           }
         ).catch(error => {
           console.log(error)
-          commit('setLoading')
+          commit('setLoading', false)
           commit('setError', error)
         })
     },
@@ -111,11 +110,7 @@ export const store = new Vuex.Store({
       }
       firebase.database().ref('classes').push(newClass)
         .then((data) => {
-          const key = data.key
-          commit('addClass', {
-            ...newClass,
-            id: key
-          })
+          console.log('Class created =>', data)
         })
         .catch((error) => {
           console.log(error)
