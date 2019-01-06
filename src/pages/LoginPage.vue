@@ -1,13 +1,14 @@
 <template>
-  <v-container fluid>
-    <v-layout row v-if="error">
-      <v-flex xs12 sm8 md6 lg4 offset-sm2 offset-md3 offset-lg4>
-        <app-alert @dismissed="onDismissed" class="mb-3" :text="error.message"></app-alert>
+  <v-container fluid class="page-container">
+    <v-layout v-if="error">
+      <v-flex xs12 sm8 md6 lg4 offset-sm2 offset-md3 offset-lg4 align-self-center>
+        <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
       </v-flex>
     </v-layout>
-    <v-layout row>
-        <v-flex xs10 sm8 md6 lg4 offset-xs1 offset-sm2 offset-md3 offset-lg4 text-xs-center>
-          <v-form v-model="valid">
+    <v-layout>
+        <v-flex xs10 sm8 md6 lg4 offset-xs1 offset-sm2 offset-md3 offset-lg4 text-xs-center align-self-center>
+          <h1 class="mb-4 py-2 primary--text">Gestão de Dúvidas</h1>
+          <v-form v-model="valid" class="mt-4">
             <v-text-field
               autocapitalize="off"
               v-model="email"
@@ -90,3 +91,18 @@
     }
   }
 </script>
+
+<style>
+.page-container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.content-container{
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+</style>
+

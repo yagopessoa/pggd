@@ -1,6 +1,6 @@
 <template>
   <v-app id="home">
-    <v-toolbar fixed dark class="primary">
+    <v-toolbar fixed dark class="primary" v-if="this.$router.history.current.fullPath !== '/'">
       <v-toolbar-side-icon 
         @click="sideNav = !sideNav" 
         class="hidden-md-and-up"
@@ -27,7 +27,7 @@
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-toolbar />
+    <v-toolbar v-if="this.$router.history.current.fullPath !== '/'" />
 
     <v-navigation-drawer fixed temporary v-model="sideNav" class="hidden-sm-and-up">
       <v-list>
