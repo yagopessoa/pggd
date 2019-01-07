@@ -143,7 +143,13 @@
       },
       onSignUp () {
         if (this.valid) {
-          this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
+          this.$store.dispatch('signUserUp', {
+            email: this.email,
+            password: this.password,
+            name: this.name,
+            bornAt: this.date,
+            isTeacher: true
+          })
         }
       },
       onDismissed () {

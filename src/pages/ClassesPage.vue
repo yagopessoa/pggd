@@ -8,7 +8,7 @@
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading">
+                <v-list v-if="!loading && classes.length > 0">
                     <v-list-tile
                         v-for="item in classes"
                         :key="item.id"
@@ -19,7 +19,15 @@
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
-                <div class="spinner-container" v-else>
+                <p
+                    class="text-xs-center"
+                    v-if="!loading && classes.length < 1 && isTeacher"
+                >Ainda não há turmas cadastradas.</p>
+                <p
+                    class="text-xs-center"
+                    v-if="!loading && classes.length < 1 && !isTeacher"
+                >Nenhuma disciplina matriculada.</p>
+                <div class="spinner-container" v-if="loading">
                     <v-progress-circular
                         indeterminate
                         color="primary"
@@ -93,7 +101,7 @@ export default {
   }),
   computed: {
     isTeacher () {
-      if (this.$store.getters.user) return true
+      if (this.$store.getters.user) return this.$store.getters.user.isTeacher
     },
     classes () {
       return this.$store.getters.classes
