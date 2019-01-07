@@ -54,17 +54,19 @@
                         class="headline grey lighten-2"
                         primary-title
                     >
-                        Nova turma
+                        <p v-if="isTeacher">Nova turma</p>
+                        <p v-else>Matrícula</p>
                     </v-card-title>
                     <v-card-text>
                         <v-form v-model="valid">
+                            <p v-if="!isTeacher">Insira o código da disciplina:</p>
                             <v-text-field
                                 autofocus
                                 v-model="title"
-                                label="Nome"
+                                :label="isTeacher ? 'Nome' : 'Código'"
                                 required
                                 class="mb-2"
-                                :rules="[v => !!v || 'Nome é obrigatório']"
+                                :rules="[v => !!v || 'Campo obrigatório']"
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
@@ -79,11 +81,20 @@
                             Cancelar
                         </v-btn>
                         <v-btn
+                            v-if="isTeacher"
                             color="primary"
                             flat
                             @click="onCreateClass"
                         >
                             Criar turma
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            color="primary"
+                            flat
+                            @click="dialog = false"
+                        >
+                            Matricular-se
                         </v-btn>
                     </v-card-actions>
                 </v-card>

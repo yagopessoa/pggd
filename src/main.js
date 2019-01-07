@@ -45,8 +45,20 @@ new Vue({
     })
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch('autoSignin', user)
-        this.$store.dispatch('loadClasses')
+        firebase.database().ref('users/' + user.uid).once('value')
+          .then(snapshot => {
+            const data = snapshot.val()
+            const newUser = {
+              id: user.uid,
+              email: user.email,
+              name: data.name,
+              bornAt: data.bornAt,
+              isTeacher: data.isTeacher
+            }
+            this.$store.dispatch('autoSignin', newUser)
+            this.$store.dispatch('loadClasses')
+          })
+          .catch(error => { console.log(error) })
       }
     })
   }

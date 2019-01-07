@@ -75,8 +75,13 @@
             :type="'password'"
             class="mb-2"
           ></v-text-field>
+          <v-checkbox
+            label="Sou professor"
+            v-model="isTeacher"
+            color="primary"
+          ></v-checkbox>
         </v-form>
-        <v-btn :disabled="loading" :loading="loading" color="primary" :style="'width: 100%; margin: 32px 0px'" contained @click="onSignUp">
+        <v-btn :disabled="loading" :loading="loading" color="primary" block contained @click="onSignUp">
           Cadastrar
           <span slot="loader" class="custom-loader">
             <v-icon light>cached</v-icon>
@@ -105,7 +110,8 @@
         v => !!v || 'Senha é obrigatória',
         v => v.length >= 8 || 'A senha deve ter pelo menos 8 caracteres'
       ],
-      confirmPassword: ''
+      confirmPassword: '',
+      isTeacher: false
     }),
     computed: {
       computedDateFormatted () {
@@ -148,7 +154,7 @@
             password: this.password,
             name: this.name,
             bornAt: this.date,
-            isTeacher: true
+            isTeacher: this.isTeacher
           })
         }
       },
