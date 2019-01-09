@@ -43,7 +43,8 @@ export const store = new Vuex.Store({
           classes.push({
             id: key,
             title: obj[key].title,
-            teacher: obj[key].teacher
+            teacher: obj[key].teacher,
+            modules: obj[key].modules
           })
         }
         /* console.log('Classes loaded =>', classes) */
@@ -153,6 +154,22 @@ export const store = new Vuex.Store({
     },
     error (state) {
       return state.error
+    },
+    loadedClass (state) {
+      return classId => {
+        const obj = state.classes.find(item => {
+          return item.id === classId
+        })
+        const modules = []
+        for (let key in obj.modules) {
+          modules.push({
+            id: key,
+            title: obj.modules[key].title,
+            doubts: []
+          })
+        }
+        return {title: obj.title, modules: modules}
+      }
     }
   }
 })

@@ -75,15 +75,25 @@
           { icon: 'person_add', title: 'Cadastre-se', link: '/cadastro' }
         ]
         if (this.userIsAuthenticated) {
-          menuItems = [
-            /* { icon: 'account_circle', title: 'Perfil', link: '/perfil' }, */
-            { icon: 'list', title: 'Turmas', link: '/turmas' }
-          ]
+          if (this.isTeacher) {
+            menuItems = [
+              /* { icon: 'account_circle', title: 'Perfil', link: '/perfil' }, */
+              { icon: 'list', title: 'Turmas', link: '/turmas' }
+            ]
+          } else {
+            menuItems = [
+              /* { icon: 'account_circle', title: 'Perfil', link: '/perfil' }, */
+              { icon: 'list', title: 'Disciplinas', link: '/turmas' }
+            ]
+          }
         }
         return menuItems
       },
       userIsAuthenticated () {
         return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+      },
+      isTeacher () {
+        return this.$store.getters.user.isTeacher
       }
     },
     methods: {

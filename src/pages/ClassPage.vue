@@ -2,17 +2,15 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p v-if="isTeacher" class="title ma-2">Suas turmas</p>
-                <p v-else class="title ma-2">Disciplinas matriculadas</p>
+                <p class="title ma-2">{{ loadedClass.title }} - Módulos</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading && classes.length > 0">
+                <v-list v-if="!loading && loadedClass.modules.length > 0">
                     <v-list-tile
-                        v-for="item in classes"
+                        v-for="item in loadedClass.modules"
                         :key="item.id"
-                        @click="onLoadClass(item.id)"
                     >
                         <v-list-tile-content>
                             <v-list-tile-title v-text="item.title" />
@@ -21,12 +19,8 @@
                 </v-list>
                 <p
                     class="text-xs-center"
-                    v-if="!loading && classes.length < 1 && isTeacher"
-                >Ainda não há turmas cadastradas.</p>
-                <p
-                    class="text-xs-center"
-                    v-if="!loading && classes.length < 1 && !isTeacher"
-                >Nenhuma disciplina matriculada.</p>
+                    v-if="!loading && loadedClass.modules.length < 1"
+                >Ainda não há módulos cadastrados.</p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
                         indeterminate
@@ -35,7 +29,7 @@
                 </div>
             </v-flex>
         </v-layout>
-        <v-layout v-if="!loading">
+        <v-layout v-if="!loading && isTeacher">
             <v-dialog
                 v-model="dialog"
                 width="500"
@@ -54,16 +48,14 @@
                         class="headline grey lighten-2"
                         primary-title
                     >
-                        <p v-if="isTeacher">Nova turma</p>
-                        <p v-else>Matrícula</p>
+                        <p>Novo módulo</p>
                     </v-card-title>
                     <v-card-text>
                         <v-form v-model="valid">
-                            <p v-if="!isTeacher">Insira o código da disciplina:</p>
                             <v-text-field
                                 autofocus
                                 v-model="title"
-                                :label="isTeacher ? 'Nome' : 'Código'"
+                                label="Nome"
                                 required
                                 class="mb-2"
                                 :rules="[v => !!v || 'Campo obrigatório']"
@@ -81,20 +73,11 @@
                             Cancelar
                         </v-btn>
                         <v-btn
-                            v-if="isTeacher"
                             color="primary"
                             flat
-                            @click="onCreateClass"
+                            @click="onCreateModule"
                         >
-                            Criar turma
-                        </v-btn>
-                        <v-btn
-                            v-else
-                            color="primary"
-                            flat
-                            @click="dialog = false"
-                        >
-                            Matricular-se
+                            Criar módulo
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -105,6 +88,7 @@
 
 <script>
 export default {
+  props: ['id'],
   data: () => ({
     dialog: false,
     valid: false,
@@ -114,23 +98,20 @@ export default {
     isTeacher () {
       if (this.$store.getters.user) return this.$store.getters.user.isTeacher
     },
-    classes () {
-      return this.$store.getters.classes
+    loadedClass () {
+      return this.$store.getters.loadedClass(this.id)
     },
     loading () {
       return this.$store.getters.loading
     }
   },
   methods: {
-    onCreateClass () {
+    onCreateModule () {
       if (this.valid) {
-        this.$store.dispatch('createClass', {title: this.title, teacher: this.$store.getters.user.id})
+        /* this.$store.dispatch('createModule ', {title: this.title, teacher: this.$store.getters.user.id}) */
         this.dialog = false
         this.title = ''
       }
-    },
-    onLoadClass (id) {
-      this.$router.push('turma/' + id)
     }
   }
 }
