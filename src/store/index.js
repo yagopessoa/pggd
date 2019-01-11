@@ -138,6 +138,18 @@ export const store = new Vuex.Store({
           console.log(error)
         })
     },
+    createModule ({commit}, payload) {
+      commit('clearError')
+      const newModule = { title: payload.title, doubts: [] }
+      firebase.database().ref('classes/' + payload.teacher + '/' + payload.classId + '/modules').push(newModule)
+        .then((data) => {
+          console.log('Module created =>', data)
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+        })
+    },
     clearError ({commit}) {
       commit('clearError')
     }
@@ -168,7 +180,7 @@ export const store = new Vuex.Store({
             doubts: []
           })
         }
-        return {title: obj.title, modules: modules}
+        return {id: classId, title: obj.title, modules: modules}
       }
     }
   }

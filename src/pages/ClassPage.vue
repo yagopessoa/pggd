@@ -108,7 +108,7 @@ export default {
   methods: {
     onCreateModule () {
       if (this.valid) {
-        /* this.$store.dispatch('createModule ', {title: this.title, teacher: this.$store.getters.user.id}) */
+        this.$store.dispatch('createModule', {classId: this.loadedClass.id, title: this.title, teacher: this.$store.getters.user.id})
         this.dialog = false
         this.title = ''
       }
