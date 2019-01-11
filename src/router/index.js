@@ -5,6 +5,7 @@ import LoginPage from '@/pages/LoginPage'
 import SignupPage from '@/pages/SignupPage'
 import ClassesPage from '@/pages/ClassesPage'
 import ClassPage from '@/pages/ClassPage'
+import ModulePage from '@/pages/ModulePage'
 
 import AuthGuard from './auth-guard'
 
@@ -33,6 +34,13 @@ export default new Router({
       name: 'ClassPage',
       props: true,
       component: ClassPage,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/modulo/:id',
+      name: 'ModulePage',
+      props: true,
+      component: ModulePage,
       beforeEnter: AuthGuard
     }
   ],

@@ -2,14 +2,14 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p class="title ma-2">{{ loadedClass.title }} - Módulos</p>
+                <p class="title ma-2">{{ loadedModule.title }} - Módulos</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading && loadedClass.modules.length > 0">
+                <v-list v-if="!loading && loadedModule.modules.length > 0">
                     <v-list-tile
-                        v-for="item in loadedClass.modules"
+                        v-for="item in loadedModule.modules"
                         :key="item.id"
                     >
                         <v-list-tile-content>
@@ -19,7 +19,7 @@
                 </v-list>
                 <p
                     class="text-xs-center"
-                    v-if="!loading && loadedClass.modules.length < 1"
+                    v-if="!loading && loadedModule.modules.length < 1"
                 >Ainda não há módulos cadastrados.</p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
@@ -29,7 +29,7 @@
                 </div>
             </v-flex>
         </v-layout>
-        <v-layout v-if="!loading && isTeacher">
+        <v-layout v-if="!loading && !isTeacher">
             <v-dialog
                 v-model="dialog"
                 width="500"
@@ -60,6 +60,13 @@
                                 class="mb-2"
                                 :rules="[v => !!v || 'Campo obrigatório']"
                             ></v-text-field>
+                            <v-text-field
+                                v-model="doubt"
+                                label="Dúvida"
+                                required
+                                class="mb-2"
+                                :rules="[v => !!v || 'Campo obrigatório']"
+                            ></v-text-field>
                         </v-form>
                     </v-card-text>
                     <v-divider />
@@ -75,9 +82,9 @@
                         <v-btn
                             color="primary"
                             flat
-                            @click="onCreateModule"
+                            @click="onCreateDoubt"
                         >
-                            Criar módulo
+                            Submeter dúvida
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -92,30 +99,35 @@ export default {
   data: () => ({
     dialog: false,
     valid: false,
-    title: ''
+    title: '',
+    doubt: ''
   }),
   computed: {
     isTeacher () {
       if (this.$store.getters.user) return this.$store.getters.user.isTeacher
     },
-    loadedClass () {
-      return this.$store.getters.loadedClass(this.id)
+    loadedModule () {
+      return this.$store.getters.loadedModule(this.id)
     },
     loading () {
       return this.$store.getters.loading
     }
   },
   methods: {
-    onCreateModule () {
+    onCreateDoubt () {
       if (this.valid) {
-        this.$store.dispatch('createModule', {classId: this.loadedClass.id, title: this.title, teacher: this.$store.getters.user.id})
+        this.$store.dispatch('createDoubt', {
+          teacher: this.$store.getters.loadedClass.teacher,
+          classId: this.$store.getters.loadedClass.id,
+          moduleId: this.loadedModule.id,
+          title: this.title,
+          doubt: this.doubt,
+          author: this.$store.getters.user.id
+        })
         this.dialog = false
         this.title = ''
       }
     }
-  },
-  mounted () {
-    this.$store.dispatch('loadClass', {id: this.id})
   }
 }
 </script>
