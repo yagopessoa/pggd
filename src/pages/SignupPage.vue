@@ -108,7 +108,7 @@
       password: '',
       passwordRules: [
         v => !!v || 'Senha é obrigatória',
-        v => v.length >= 8 || 'A senha deve ter pelo menos 8 caracteres'
+        v => v.length >= 6 || 'A senha deve ter pelo menos 6 caracteres'
       ],
       confirmPassword: '',
       isTeacher: false
