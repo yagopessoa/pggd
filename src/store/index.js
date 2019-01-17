@@ -205,6 +205,7 @@ export const store = new Vuex.Store({
     },
     loadedModule (state) {
       return moduleId => {
+        console.log(state.loadedClass)
         const obj = state.loadedClass.modules.find(item => {
           return item.id === moduleId
         })

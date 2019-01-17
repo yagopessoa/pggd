@@ -11,6 +11,7 @@
                     <v-list-tile
                         v-for="item in loadedClass.modules"
                         :key="item.id"
+                        @click="onLoadModule(item.id)"
                     >
                         <v-list-tile-content>
                             <v-list-tile-title v-text="item.title" />
@@ -112,6 +113,9 @@ export default {
         this.dialog = false
         this.title = ''
       }
+    },
+    onLoadModule (id) {
+      this.$router.push('/modulo/' + id)
     }
   },
   mounted () {
