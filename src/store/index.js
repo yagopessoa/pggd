@@ -137,6 +137,20 @@ export const store = new Vuex.Store({
       firebase.database().ref('classes/' + payload.teacher).push(newClass)
         .then((data) => {
           console.log('Class created =>', data)
+          firebase.database().ref('global-classes').once('value')
+            .then(snapshot => {
+              const globalClasses = snapshot.val()
+              if (globalClasses) {
+                let count = 0
+                for (let key in globalClasses) {
+                  console.log(key)
+                  count += 1
+                }
+                firebase.database().ref('global-classes/' + data.key).set({id: count + 1})
+              } else {
+                firebase.database().ref('global-classes/' + data.key).set({id: 1})
+              }
+            })
         })
         .catch((error) => {
           console.log(error)
