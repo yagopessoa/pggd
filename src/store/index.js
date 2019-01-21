@@ -78,7 +78,7 @@ export const store = new Vuex.Store({
             console.log(error)
           })
         }
-        console.log('Student classes loaded =>', classes)
+        /* console.log('Student classes loaded =>', classes) */
         commit('setLoadedClasses', classes)
         commit('setLoading', false)
       }, error => {
@@ -179,6 +179,29 @@ export const store = new Vuex.Store({
                 firebase.database().ref('global-classes/' + data.key).set({id: 1, teacher: payload.teacher})
               }
             })
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+        })
+    },
+    joinClass ({commit}, payload) {
+      commit('clearError')
+      firebase.database().ref('global-classes').once('value')
+        .then(snapshot => {
+          const allClasses = snapshot.val()
+          /* console.log('allClasses:', allClasses) */
+          for (let key in allClasses) {
+            if (allClasses[key].id === parseInt(payload.id)) {
+              const newClass = {
+                teacher: allClasses[key].teacher,
+                classId: key
+              }
+              firebase.database().ref('student-classes/' + this.getters.user.id).push(newClass)
+                .catch((error) => console.log(error))
+              break
+            }
+          }
         })
         .catch((error) => {
           console.log(error)

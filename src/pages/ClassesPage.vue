@@ -76,7 +76,7 @@
                         <v-btn
                             color="error"
                             flat
-                            @click="dialog = false"
+                            @click="dialog = false; title = ''"
                         >
                             Cancelar
                         </v-btn>
@@ -92,7 +92,7 @@
                             v-else
                             color="primary"
                             flat
-                            @click="dialog = false"
+                            @click="onJoinClass"
                         >
                             Matricular-se
                         </v-btn>
@@ -125,6 +125,13 @@ export default {
     onCreateClass () {
       if (this.valid) {
         this.$store.dispatch('createClass', {title: this.title, teacher: this.$store.getters.user.id})
+        this.dialog = false
+        this.title = ''
+      }
+    },
+    onJoinClass () {
+      if (this.valid) {
+        this.$store.dispatch('joinClass', {id: this.title})
         this.dialog = false
         this.title = ''
       }
