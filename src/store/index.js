@@ -133,6 +133,7 @@ export const store = new Vuex.Store({
       router.push('/')
     },
     createClass ({commit}, payload) {
+      commit('clearError')
       const newClass = { title: payload.title }
       firebase.database().ref('classes/' + payload.teacher).push(newClass)
         .then((data) => {
@@ -146,18 +147,19 @@ export const store = new Vuex.Store({
                   console.log(key)
                   count += 1
                 }
-                firebase.database().ref('global-classes/' + data.key).set({id: count + 1})
+                firebase.database().ref('global-classes/' + data.key).set({id: count + 1, teacher: payload.teacher})
               } else {
-                firebase.database().ref('global-classes/' + data.key).set({id: 1})
+                firebase.database().ref('global-classes/' + data.key).set({id: 1, teacher: payload.teacher})
               }
             })
         })
         .catch((error) => {
           console.log(error)
+          commit('setError', error)
         })
     },
     loadClass ({commit}, payload) {
-      commit('setLoadedClass', payload.id)
+      commit('setLoadedClass', payload)
     },
     createModule ({commit}, payload) {
       commit('clearError')
@@ -219,10 +221,11 @@ export const store = new Vuex.Store({
     },
     loadedModule (state) {
       return moduleId => {
-        console.log(state.loadedClass)
+        console.log('Class:', state.loadedClass)
         const obj = state.loadedClass.modules.find(item => {
           return item.id === moduleId
         })
+        console.log('Module:', obj)
         const doubts = []
         for (let key in obj.doubts) {
           doubts.push({

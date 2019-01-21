@@ -7,9 +7,9 @@
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading && loadedModule.modules.length > 0">
+                <v-list v-if="!loading && loadedModule.doubts.length > 0">
                     <v-list-tile
-                        v-for="item in loadedModule.modules"
+                        v-for="item in loadedModule.doubts"
                         :key="item.id"
                     >
                         <v-list-tile-content>
@@ -19,7 +19,7 @@
                 </v-list>
                 <p
                     class="text-xs-center"
-                    v-if="!loading && loadedModule.modules.length < 1"
+                    v-if="!loading && loadedModule.doubts.length < 1"
                 >Ainda não há dúvidas submetidas.</p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
