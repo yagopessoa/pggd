@@ -56,7 +56,8 @@ new Vue({
               isTeacher: data.isTeacher
             }
             this.$store.dispatch('autoSignin', newUser)
-            this.$store.dispatch('loadClasses')
+            if (data.isTeacher) this.$store.dispatch('loadClasses')
+            else this.$store.dispatch('loadClassesStudent')
           })
           .catch(error => { console.log(error) })
       }

@@ -119,7 +119,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('loadClass', this.$store.getters.loadedClass(this.id)/* {id: this.id} */)
+    this.$store.dispatch('loadClass', this.$store.getters.loadedClass(this.id))
   }
 }
 </script>

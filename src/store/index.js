@@ -59,6 +59,33 @@ export const store = new Vuex.Store({
         commit('setLoading', false)
       })
     },
+    loadClassesStudent ({commit}) {
+      commit('setLoading', true)
+      commit('clearError')
+      firebase.database().ref('student-classes/' + this.getters.user.id).on('value', data => {
+        const classes = []
+        const list = data.val()
+        for (let key in list) {
+          firebase.database().ref('classes/' + list[key].teacher + '/' + list[key].classId).on('value', classData => {
+            const studentClass = classData.val()
+            classes.push({
+              id: list[key].classId,
+              title: studentClass.title,
+              teacher: list[key].teacher,
+              modules: studentClass.modules
+            })
+          }, error => {
+            console.log(error)
+          })
+        }
+        console.log('Student classes loaded =>', classes)
+        commit('setLoadedClasses', classes)
+        commit('setLoading', false)
+      }, error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
+    },
     signUserUp ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -221,11 +248,9 @@ export const store = new Vuex.Store({
     },
     loadedModule (state) {
       return moduleId => {
-        console.log('Class:', state.loadedClass)
         const obj = state.loadedClass.modules.find(item => {
           return item.id === moduleId
         })
-        console.log('Module:', obj)
         const doubts = []
         for (let key in obj.doubts) {
           doubts.push({
