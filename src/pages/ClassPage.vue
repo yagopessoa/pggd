@@ -2,7 +2,12 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p class="title ma-2">{{ loadedClass.title }} - Módulos</p>
+                <p class="headline ma-2">{{ loadedClass.title }} - Módulos</p>
+            </v-flex>
+        </v-layout>
+        <v-layout row v-if="loadedClass.accessKey">
+            <v-flex xs12 text-xs-center>
+                <p class="body-2 ma-2">Código de acesso: {{ loadedClass.accessKey }}</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
@@ -21,7 +26,7 @@
                 <p
                     class="text-xs-center"
                     v-if="!loading && loadedClass.modules.length < 1"
-                >Ainda não há módulos cadastrados.</p>
+                ><i>Ainda não há módulos cadastrados.</i></p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
                         indeterminate

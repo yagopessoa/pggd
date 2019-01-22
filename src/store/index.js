@@ -44,14 +44,28 @@ export const store = new Vuex.Store({
         const classes = []
         const obj = data.val()
         for (let key in obj) {
-          classes.push({
-            id: key,
-            title: obj[key].title,
-            teacher: obj[key].teacher,
-            modules: obj[key].modules
-          })
+          firebase.database().ref('global-classes/' + key).once('value')
+            .then(snapshot => {
+              const globalClass = snapshot.val()
+              if (globalClass) {
+                classes.push({
+                  id: key,
+                  title: obj[key].title,
+                  teacher: obj[key].teacher,
+                  modules: obj[key].modules,
+                  accessKey: globalClass.id
+                })
+              } else {
+                classes.push({
+                  id: key,
+                  title: obj[key].title,
+                  teacher: obj[key].teacher,
+                  modules: obj[key].modules
+                })
+              }
+            })
         }
-        /* console.log('Classes loaded =>', classes) */
+        console.log('Classes loaded =>', classes)
         commit('setLoadedClasses', classes)
         commit('setLoading', false)
       }, error => {
@@ -161,14 +175,17 @@ export const store = new Vuex.Store({
     },
     createModule ({commit}, payload) {
       commit('clearError')
+      commit('setLoading', true)
       const newModule = { title: payload.title, doubts: [] }
       firebase.database().ref('classes/' + payload.teacher + '/' + payload.classId + '/modules').push(newModule)
         .then((data) => {
           console.log('Module created =>', data)
+          commit('setLoading', false)
         })
         .catch((error) => {
           console.log(error)
           commit('setError', error)
+          commit('setLoading', false)
         })
     },
     createDoubt ({commit}, payload) {
@@ -202,9 +219,12 @@ export const store = new Vuex.Store({
     },
     loadedClass (state) {
       return classId => {
+        /* INVESTIGAR PQ AS TURMAS SOMEM QUANDO CRIA UM NOVO MÓDULO */
+        console.log('Classes:', state.classes)
         const obj = state.classes.find(item => {
           return item.id === classId
         })
+        console.log('Class:', obj)
         const modules = []
         for (let key in obj.modules) {
           modules.push({
@@ -213,7 +233,7 @@ export const store = new Vuex.Store({
             doubts: []
           })
         }
-        const loaded = {id: classId, title: obj.title, teacher: obj.teacher, modules: modules}
+        const loaded = {id: classId, title: obj.title, teacher: obj.teacher, modules: modules, accessKey: obj.accessKey}
         return loaded
       }
     },

@@ -2,7 +2,7 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p class="title ma-2">{{ loadedModule.title }} - Dúvidas</p>
+                <p class="headline ma-2">{{ loadedModule.title }} - Dúvidas</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
@@ -20,7 +20,7 @@
                 <p
                     class="text-xs-center"
                     v-if="!loading && loadedModule.modules.length < 1"
-                >Ainda não há dúvidas submetidas.</p>
+                ><i>Ainda não há dúvidas submetidas.</i></p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
                         indeterminate

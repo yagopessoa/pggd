@@ -2,8 +2,8 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p v-if="isTeacher" class="title ma-2">Suas turmas</p>
-                <p v-else class="title ma-2">Disciplinas matriculadas</p>
+                <p v-if="isTeacher" class="headline ma-2">Suas turmas</p>
+                <p v-else class="headline ma-2">Disciplinas matriculadas</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
@@ -22,7 +22,7 @@
                 <p
                     class="text-xs-center"
                     v-if="!loading && classes.length < 1 && isTeacher"
-                >Ainda não há turmas cadastradas.</p>
+                ><i>Ainda não há turmas cadastradas.</i></p>
                 <p
                     class="text-xs-center"
                     v-if="!loading && classes.length < 1 && !isTeacher"
