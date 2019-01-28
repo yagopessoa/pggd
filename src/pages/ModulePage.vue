@@ -2,24 +2,26 @@
     <v-container fluid class="container">
         <v-layout row>
             <v-flex xs12 text-xs-center>
-                <p class="title ma-2">{{ loadedModule.title }} - Dúvidas</p>
+                <p class="title ma-2">{{ loadedClass.title }}: {{ loadedModule.title }}</p>
+                <p class="title ma-2">Dúvidas</p>
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading && loadedModule.doubts.length > 0">
+                <v-list v-if="!loading && loadedDoubts.length > 0">
                     <v-list-tile
-                        v-for="item in loadedModule.doubts"
+                        v-for="item in loadedDoubts"
                         :key="item.id"
                     >
                         <v-list-tile-content>
                             <v-list-tile-title v-text="item.title" />
+                            <v-list-tile-sub-title v-text="item.doubt" />
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
                 <p
                     class="text-xs-center"
-                    v-if="!loading && loadedModule.doubts.length < 1"
+                    v-if="!loading && loadedDoubts.length < 1"
                 >Ainda não há dúvidas submetidas.</p>
                 <div class="spinner-container" v-if="loading">
                     <v-progress-circular
@@ -106,8 +108,14 @@ export default {
     isTeacher () {
       if (this.$store.getters.user) return this.$store.getters.user.isTeacher
     },
+    loadedClass () {
+      return this.$store.getters.loadedClass
+    },
     loadedModule () {
       return this.$store.getters.loadedModule(this.id)
+    },
+    loadedDoubts () {
+      return this.$store.getters.loadedDoubts
     },
     loading () {
       return this.$store.getters.loading
@@ -115,10 +123,13 @@ export default {
   },
   methods: {
     onCreateDoubt () {
+      /* console.log('teacher:', this.loadedClass.teacher)
+      console.log('classId:', this.loadedClass.id)
+      console.log('moduleId:', this.loadedModule) */
       if (this.valid) {
         this.$store.dispatch('createDoubt', {
-          teacher: this.$store.getters.loadedClass.teacher,
-          classId: this.$store.getters.loadedClass.id,
+          teacher: this.loadedClass.teacher,
+          classId: this.loadedClass.id,
           moduleId: this.loadedModule.id,
           title: this.title,
           doubt: this.doubt,
@@ -128,6 +139,9 @@ export default {
         this.title = ''
       }
     }
+  },
+  mounted () {
+    this.$store.dispatch('loadDoubts', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id})
   }
 }
 </script>

@@ -11,7 +11,8 @@ export const store = new Vuex.Store({
     loading: false,
     error: null,
     classes: [],
-    loadedClass: null
+    loadedClass: null,
+    loadedDoubts: []
   }),
   mutations: {
     setLoadedClasses (state, payload) {
@@ -25,6 +26,9 @@ export const store = new Vuex.Store({
     },
     setLoadedClass (state, payload) {
       state.loadedClass = payload
+    },
+    setLoadedDoubts (state, payload) {
+      state.loadedDoubts = payload
     },
     setLoading (state, payload) {
       state.loading = payload
@@ -223,6 +227,29 @@ export const store = new Vuex.Store({
           commit('setError', error)
         })
     },
+    loadDoubts ({commit}, payload) {
+      commit('clearError')
+      commit('setLoading', true)
+      firebase.database().ref('classes/' + payload.teacher + '/' + payload.classId + '/modules/' + payload.moduleId).on('value', data => {
+        const doubts = []
+        const list = data.val().doubts
+        for (let key in list) {
+          doubts.push({
+            id: key,
+            title: list[key].title,
+            doubt: list[key].doubt,
+            author: list[key].author,
+            votes: list[key].votes
+          })
+        }
+        commit('setLoadedDoubts', doubts)
+        commit('setLoading', false)
+      }, error => {
+        console.log(error)
+        commit('setError', error)
+        commit('setLoading', false)
+      })
+    },
     createDoubt ({commit}, payload) {
       commit('clearError')
       const newDoubt = { title: payload.title, doubt: payload.doubt, author: payload.author, votes: [] }
@@ -252,7 +279,7 @@ export const store = new Vuex.Store({
     error (state) {
       return state.error
     },
-    loadedClass (state) {
+    classToLoad (state) {
       return classId => {
         const obj = state.classes.find(item => {
           return item.id === classId
@@ -269,23 +296,19 @@ export const store = new Vuex.Store({
         return loaded
       }
     },
+    loadedClass (state) {
+      return state.loadedClass
+    },
     loadedModule (state) {
       return moduleId => {
         const obj = state.loadedClass.modules.find(item => {
           return item.id === moduleId
         })
-        const doubts = []
-        for (let key in obj.doubts) {
-          doubts.push({
-            id: key,
-            title: obj.doubts[key].title,
-            doubt: obj.doubts[key].doubt,
-            author: obj.doubts[key].author,
-            votes: obj.doubts[key].votes
-          })
-        }
-        return {id: moduleId, title: obj.title, doubts: doubts}
+        return {id: moduleId, title: obj.title}
       }
+    },
+    loadedDoubts (state) {
+      return state.loadedDoubts
     }
   }
 })

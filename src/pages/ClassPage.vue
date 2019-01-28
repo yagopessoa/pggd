@@ -100,7 +100,7 @@ export default {
       if (this.$store.getters.user) return this.$store.getters.user.isTeacher
     },
     loadedClass () {
-      return this.$store.getters.loadedClass(this.id)
+      return this.$store.getters.classToLoad(this.id)
     },
     loading () {
       return this.$store.getters.loading
@@ -119,7 +119,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('loadClass', this.$store.getters.loadedClass(this.id))
+    this.$store.dispatch('loadClass', this.$store.getters.classToLoad(this.id))
   }
 }
 </script>
