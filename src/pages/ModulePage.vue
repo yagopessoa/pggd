@@ -141,7 +141,8 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('loadDoubts', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id})
+    if (this.isTeacher) this.$store.dispatch('loadDoubts', {teacher: this.$store.getters.user.id, classId: this.loadedClass.id, moduleId: this.id})
+    else this.$store.dispatch('loadDoubts', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id})
   }
 }
 </script>

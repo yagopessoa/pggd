@@ -114,13 +114,13 @@ export const store = new Vuex.Store({
             }).catch(error => {
               console.log(error)
               commit('setLoading', false)
-              commit('setError', error)
+              /* commit('setError', error) */
             })
           }
         ).catch(error => {
           console.log(error)
           commit('setLoading', false)
-          commit('setError', error)
+          /* commit('setError', error) */
         })
     },
     signUserIn ({commit}, payload) {
@@ -186,7 +186,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          commit('setError', error)
+          /* commit('setError', error) */
         })
     },
     joinClass ({commit}, payload) {
@@ -209,7 +209,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          commit('setError', error)
+          /* commit('setError', error) */
         })
     },
     loadClass ({commit}, payload) {
@@ -224,7 +224,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          commit('setError', error)
+          /* commit('setError', error) */
         })
     },
     loadDoubts ({commit}, payload) {
@@ -246,7 +246,7 @@ export const store = new Vuex.Store({
         commit('setLoading', false)
       }, error => {
         console.log(error)
-        commit('setError', error)
+        /* commit('setError', error) */
         commit('setLoading', false)
       })
     },
@@ -259,7 +259,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          commit('setError', error)
+          /* commit('setError', error) */
         })
     },
     clearError ({commit}) {
