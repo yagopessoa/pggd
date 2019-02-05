@@ -3,6 +3,7 @@
         <v-layout row>
             <v-flex xs12 text-xs-center>
                 <p class="title ma-2">{{ loadedClass.title }} - Módulos</p>
+                <!-- <p class="subheading ma-2" v-if="isTeacher">Código de acesso: {{ loadedClass.accessKey }}</p> -->
             </v-flex>
         </v-layout>
         <v-layout row class="mt-4">

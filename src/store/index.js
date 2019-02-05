@@ -48,12 +48,26 @@ export const store = new Vuex.Store({
         const classes = []
         const obj = data.val()
         for (let key in obj) {
-          classes.push({
-            id: key,
-            title: obj[key].title,
-            teacher: obj[key].teacher,
-            modules: obj[key].modules
-          })
+          firebase.database().ref('global-classes/' + key).once('value')
+            .then(snapshot => {
+              const globalClass = snapshot.val()
+              if (globalClass) {
+                classes.push({
+                  id: key,
+                  title: obj[key].title,
+                  teacher: obj[key].teacher,
+                  modules: obj[key].modules,
+                  accessKey: globalClass.id
+                })
+              } else {
+                classes.push({
+                  id: key,
+                  title: obj[key].title,
+                  teacher: obj[key].teacher,
+                  modules: obj[key].modules
+                })
+              }
+            })
         }
         /* console.log('Classes loaded =>', classes) */
         commit('setLoadedClasses', classes)
