@@ -70,7 +70,7 @@ export const store = new Vuex.Store({
         const classes = []
         const list = data.val()
         for (let key in list) {
-          firebase.database().ref('classes/' + list[key].teacher + '/' + list[key].classId).on('value', classData => {
+          firebase.database().ref('classes/' + list[key].teacher + '/' + list[key].classId).once('value').then(classData => {
             const studentClass = classData.val()
             classes.push({
               id: list[key].classId,
@@ -78,7 +78,7 @@ export const store = new Vuex.Store({
               teacher: list[key].teacher,
               modules: studentClass.modules
             })
-          }, error => {
+          }).catch(error => {
             console.log(error)
           })
         }
