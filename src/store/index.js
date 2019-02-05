@@ -239,9 +239,11 @@ export const store = new Vuex.Store({
             title: list[key].title,
             doubt: list[key].doubt,
             author: list[key].author,
-            votes: list[key].votes
+            votes: list[key].votes ? list[key].votes : [],
+            voted: list[key].votes && list[key].votes.includes(payload.userId)
           })
         }
+        doubts.sort((a, b) => b.votes.length - a.votes.length)
         commit('setLoadedDoubts', doubts)
         commit('setLoading', false)
       }, error => {
@@ -261,6 +263,16 @@ export const store = new Vuex.Store({
           console.log(error)
           /* commit('setError', error) */
         })
+    },
+    voteDoubt ({commit}, payload) {
+      commit('clearError')
+      firebase.database().ref('classes/' + payload.teacher + '/' + payload.classId + '/modules/' + payload.moduleId + '/doubts/' + payload.id + '/votes').once('value').then(data => {
+        let votes = data.val() ? data.val() : []
+        if (!votes.includes(payload.userId)) {
+          votes.push(payload.userId)
+          firebase.database().ref('classes/' + payload.teacher + '/' + payload.classId + '/modules/' + payload.moduleId + '/doubts/' + payload.id + '/votes').set(votes).catch(error => console.log(error))
+        }
+      }).catch(error => console.log(error))
     },
     clearError ({commit}) {
       commit('clearError')

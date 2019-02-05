@@ -8,7 +8,7 @@
         </v-layout>
         <v-layout row class="mt-4">
             <v-flex xs12 sm8 md6 offset-sm2 offset-md3>
-                <v-list v-if="!loading && loadedDoubts.length > 0">
+                <!-- <v-list v-if="!loading && loadedDoubts.length > 0">
                     <v-list-tile
                         v-for="item in loadedDoubts"
                         :key="item.id"
@@ -18,7 +18,28 @@
                             <v-list-tile-sub-title v-text="item.doubt" />
                         </v-list-tile-content>
                     </v-list-tile>
-                </v-list>
+                </v-list> -->
+                <v-card
+                    v-if="!loading && loadedDoubts.length > 0"
+                    v-for="item in loadedDoubts"
+                    :key="item.id"
+                    class="mb-2"
+                >
+                    <v-card-title primary-title>
+                        <div>
+                            <div class="headline">{{ item.title }}</div>
+                            <span class="subheading grey--text">{{ item.doubt }}</span>
+                        </div>
+                    </v-card-title>
+
+                    <v-card-actions v-if="!isTeacher">
+                        <v-spacer></v-spacer>
+                        <v-btn icon @click="handleVote(item.id)">
+                            <v-icon v-if="item.voted">thumb_up</v-icon>
+                            <v-icon v-else class="grey--text">thumb_up</v-icon>
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
                 <p
                     class="text-xs-center"
                     v-if="!loading && loadedDoubts.length < 1"
@@ -123,9 +144,6 @@ export default {
   },
   methods: {
     onCreateDoubt () {
-      /* console.log('teacher:', this.loadedClass.teacher)
-      console.log('classId:', this.loadedClass.id)
-      console.log('moduleId:', this.loadedModule) */
       if (this.valid) {
         this.$store.dispatch('createDoubt', {
           teacher: this.loadedClass.teacher,
@@ -138,11 +156,14 @@ export default {
         this.dialog = false
         this.title = ''
       }
+    },
+    handleVote (id) {
+      this.$store.dispatch('voteDoubt', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id, userId: this.$store.getters.user.id, id: id, student: this.$store.getters.user.id})
     }
   },
   mounted () {
-    if (this.isTeacher) this.$store.dispatch('loadDoubts', {teacher: this.$store.getters.user.id, classId: this.loadedClass.id, moduleId: this.id})
-    else this.$store.dispatch('loadDoubts', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id})
+    if (this.isTeacher) this.$store.dispatch('loadDoubts', {teacher: this.$store.getters.user.id, classId: this.loadedClass.id, moduleId: this.id, userId: '-1'})
+    else this.$store.dispatch('loadDoubts', {teacher: this.loadedClass.teacher, classId: this.loadedClass.id, moduleId: this.id, userId: this.$store.getters.user.id})
   }
 }
 </script>
