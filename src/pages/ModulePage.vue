@@ -155,6 +155,7 @@ export default {
         })
         this.dialog = false
         this.title = ''
+        this.doubt = ''
       }
     },
     handleVote (id) {
