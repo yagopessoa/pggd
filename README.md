@@ -1,6 +1,7 @@
 # PGGD
 
-> A PWA educational project built with Vue.js
+> A PWA educational project built with Vue.js, participating in the [Campus Mobile](https://www.institutonetclaroembratel.org.br/campus-mobile/) - 7ª Ed. program created by Instituto NET Claro Embratel.
+
 
 ## Build Setup
 
